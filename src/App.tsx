@@ -1379,7 +1379,7 @@ function useScrollReveal() {
 
 /* ── FLOATING PARTICLES ── */
 function Particles() {
-  const canvasRef = useRef(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   useEffect(() => {
     const c = canvasRef.current;
     if (!c) return;
@@ -1395,11 +1395,11 @@ function Particles() {
       color: colors[Math.floor(Math.random() * colors.length)],
       opacity: Math.random() * .4 + .1,
     }));
-    const onMove = (e) => { mx = e.clientX; my = e.clientY; };
+    const onMove = (e: MouseEvent) => { mx = e.clientX; my = e.clientY; };
     const onResize = () => { W = c.width = window.innerWidth; H = c.height = window.innerHeight; };
     window.addEventListener("mousemove", onMove);
     window.addEventListener("resize", onResize);
-    let raf;
+    let raf: number;
     const draw = () => {
       ctx.clearRect(0, 0, W, H);
       pts.forEach((p) => {
@@ -1438,7 +1438,11 @@ function Particles() {
 }
 
 /* ── TYPEWRITER ── */
-function TypeWriter({ texts, speed = 80 }) {
+interface TypeWriterProps {
+  texts: string[];
+  speed?: number;
+}
+function TypeWriter({ texts, speed = 80 }: TypeWriterProps) {
   const [display, setDisplay] = useState("");
   const [idx, setIdx] = useState(0);
   const [deleting, setDeleting] = useState(false);
@@ -1464,7 +1468,12 @@ function TypeWriter({ texts, speed = 80 }) {
 }
 
 /* ── SECTION HEADING ── */
-function SH({ num, title, color = "#a78bfa" }) {
+interface SHProps {
+  num: string;
+  title: string;
+  color?: string;
+}
+function SH({ num, title, color = "#a78bfa" }: SHProps) {
   return (
     <div className="reveal" style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "2rem" }}>
       <span className="mono" style={{ fontSize: ".55rem", letterSpacing: ".2em", color: color + "aa", textTransform: "uppercase" }}>{num}</span>
@@ -1483,7 +1492,7 @@ function Nav() {
     window.addEventListener("scroll", fn);
     return () => window.removeEventListener("scroll", fn);
   }, []);
-  const go = (id) => { document.getElementById(id)?.scrollIntoView({ behavior: "smooth" }); setActive(id); };
+  const go = (id: string) => { document.getElementById(id)?.scrollIntoView({ behavior: "smooth" }); setActive(id); };
   const links = ["home", "about", "experience", "projects", "skills", "contact"];
   return (
     <nav style={{
@@ -1607,13 +1616,6 @@ function ImageFrame() {
 
 /* ── 4 FLOWERS DECORATION ── */
 function FourFlowers() {
-  const flowerColors = [
-    { color: "#fb923c", name: "Orange" },
-    { color: "#f97316", name: "Dark Orange" },
-    { color: "#fbbf24", name: "Amber" },
-    { color: "#ea580c", name: "Burnt Orange" },
-  ];
-
   return (
     <div style={{ 
       display: "flex", 
@@ -1645,7 +1647,7 @@ function FourFlowers() {
 function Hero() {
   const [mouse, setMouse] = useState({ x: .5, y: .5 });
   useEffect(() => {
-    const fn = (e) => setMouse({ x: e.clientX / window.innerWidth, y: e.clientY / window.innerHeight });
+    const fn = (e: MouseEvent) => setMouse({ x: e.clientX / window.innerWidth, y: e.clientY / window.innerHeight });
     window.addEventListener("mousemove", fn);
     return () => window.removeEventListener("mousemove", fn);
   }, []);
@@ -1935,7 +1937,7 @@ function Projects() {
 
 /* ── SKILLS ── */
 function Skills() {
-  const [active, setActive] = useState("Frontend");
+  const [active, setActive] = useState<keyof typeof DATA.skills>("Frontend");
   const allItems = Object.values(DATA.skills).flatMap((s) => s.items);
 
   return (
@@ -1960,7 +1962,7 @@ function Skills() {
 
         {/* Category Buttons */}
         <div className="reveal" style={{ display: "flex", flexWrap: "wrap", gap: ".5rem", marginBottom: "1.5rem" }}>
-          {Object.keys(DATA.skills).map((cat) => {
+          {(Object.keys(DATA.skills) as (keyof typeof DATA.skills)[]).map((cat) => {
             const isActive = active === cat;
             const col = DATA.skills[cat].color;
             return (
@@ -1980,7 +1982,7 @@ function Skills() {
 
         {/* Active Skill Pills */}
         <div className="reveal" style={{ display: "flex", flexWrap: "wrap", gap: ".5rem", minHeight: 48, marginBottom: "2rem" }}>
-          {DATA.skills[active].items.map((sk, i) => (
+          {DATA.skills[active].items.map((sk: string, i: number) => (
             <span key={sk} className="skill-pill mono" style={{
               padding: ".4rem 0.9rem", borderRadius: 8,
               fontSize: ".68rem", border: `1px solid ${DATA.skills[active].color}44`,
