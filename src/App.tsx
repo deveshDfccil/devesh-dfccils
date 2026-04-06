@@ -753,7 +753,7 @@
 //               <span>📄</span>
 //               <span>Resume</span>
 //             </a>
-//             {[["GitHub", DATA.links.github, "🐙"], ["LinkedIn", DATA.links.linkedin, "💼"]].map(([label, href, icon]) => (
+//             {[["Portfolio", "https://devesh-dfccils.onrender.com", "🌐"], ["GitHub", DATA.links.github, "🐙"], ["LinkedIn", DATA.links.linkedin, "💼"]].map(([label, href, icon]) => (
 //               <a key={label} href={href} target="_blank" rel="noreferrer" style={{
 //                 display: "inline-flex", alignItems: "center", gap: "0.35rem", padding: ".5rem 0.75rem", borderRadius: 6,
 //                 background: "rgba(255,255,255,.05)", border: "1px solid rgba(255,255,255,.15)",
