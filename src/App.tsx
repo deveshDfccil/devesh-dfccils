@@ -1,6 +1,4 @@
-
-
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 
 /* ── GLOBAL STYLES ── */
 const GlobalStyles = () => (
@@ -34,6 +32,16 @@ const GlobalStyles = () => (
     @keyframes centerGlow {
       0%, 100% { r: 18px; filter: drop-shadow(0 0 10px rgba(251, 146, 60, 0.8)); }
       50% { r: 22px; filter: drop-shadow(0 0 20px rgba(251, 146, 60, 1)); }
+    }
+    @keyframes twinkle {
+      0%, 100% { opacity: .28; transform: scale(1);   }
+      50%      { opacity: 1;   transform: scale(1.8); }
+    }
+    @keyframes shootStar {
+      0%   { transform: translate(0,0); opacity: 0; }
+      4%   { opacity: 1; }
+      24%  { transform: translate(-360px, 240px); opacity: 0; }
+      100% { transform: translate(-360px, 240px); opacity: 0; }
     }
 
     .syne      { font-family: 'Syne', sans-serif; }
@@ -74,7 +82,7 @@ const GlobalStyles = () => (
     .nav-link::after { content:''; position:absolute; bottom:-3px; left:0; width:0; height:2px; background:linear-gradient(90deg,#38bdf8,#a78bfa); transition:width .3s; }
     .nav-link:hover::after, .nav-link.active::after { width: 100%; }
 
-    .photo-frame { position: relative; width: 200px; height: 200px; margin: 0 auto; }
+    .photo-frame { position: relative; width: clamp(150px, 30vw, 280px); height: clamp(150px, 30vw, 280px); margin: 0 auto; }
     .photo-circle {
       position: absolute; top: 0; left: 0; right: 0; bottom: 0;
       border-radius: 50%; overflow: hidden;
@@ -89,17 +97,16 @@ const GlobalStyles = () => (
     .particle { position:absolute; width:3px; height:3px; border-radius:50%; background:#38bdf8; filter:blur(1px); animation:particleDrift 8s linear infinite; }
 
     @media (max-width: 1024px) {
-      .hero-grid { grid-template-columns: 1fr !important; text-align: center; gap: 2rem !important; }
+      .hero-grid { grid-template-columns: 1fr !important; text-align: center; gap: 1.25rem !important; }
       .hero-image-container { margin: 0 auto; order: -1; }
     }
     @media (max-width: 768px) {
-      .photo-frame { width: 160px !important; height: 160px !important; }
       .nav-links-desktop { display: none !important; }
-      section { padding: 3rem 1rem !important; }
+      section { padding: 2.5rem 1rem !important; }
       h1 { font-size: clamp(1.8rem, 7vw, 5rem) !important; }
     }
     @media (max-width: 480px) {
-      .photo-frame { width: 120px !important; height: 120px !important; }
+      section { padding: 2rem 1rem !important; }
       h1 { font-size: clamp(1.3rem, 5vw, 3rem) !important; }
       p { font-size: 0.8rem !important; }
     }
@@ -109,8 +116,8 @@ const GlobalStyles = () => (
 /* ── DATA ── */
 const DATA = {
   name: ["DEVESH", "PRATAP SINGH"],
-  role: "Junior React Developer",
-  tagline: "React.js · Redux Toolkit · Tailwind CSS · REST API Integration",
+  role: "React Developer",
+  tagline: "React.js · Redux Toolkit · Tailwind CSS · MySQL · REST API Integration",
   email: "devesh639281@gmail.com",
   phone: "+91-6392814739",
   location: "Noida, Sector 58, Uttar Pradesh, India",
@@ -119,30 +126,48 @@ const DATA = {
     github: "https://github.com/deveshDfccil/",
   },
   about:
-    "Junior React Developer with 1+ years of experience building production-grade web applications for government clients. Key contributor to DFCCIL (Ministry of Railways, Government of India) digital transformation at Cetpa Infotech Pvt. Ltd. Independently led Training Management System and Task Management System end-to-end. Skilled in bug resolution, UI/UX enhancement, and REST API integration across enterprise platforms.",
+    "React Developer with 1.5+ years of experience building production-grade web applications across product-based and government platforms. Currently building GT Infiniti, a transportation platform, at GreenSoft Solutions Pvt. Ltd., working across React.js, Tailwind CSS, MySQL (stored procedures) and ASP.NET. Previously, at Cetpa Infotech, independently led the Training Management System and Task Management System end-to-end for DFCCIL (Ministry of Railways, Government of India). Skilled in bug resolution, UI/UX enhancement, and REST API integration across enterprise platforms.",
   stats: [
-    { label: "Years Exp",   value: "1+", color: "#a78bfa", glow: "rgba(167,139,250,.4)" },
-    { label: "Gov Projects",value: "5+", color: "#38bdf8", glow: "rgba(56,189,248,.4)"  },
+    { label: "Years Exp",   value: "1.5+", color: "#a78bfa", glow: "rgba(167,139,250,.4)" },
+    { label: "Companies",   value: "2",  color: "#f472b6", glow: "rgba(244,114,182,.4)" },
     { label: "Systems Led", value: "2",  color: "#34d399", glow: "rgba(52,211,153,.4)"  },
     { label: "MERN Stack",  value: "∞",  color: "#fb923c", glow: "rgba(251,146,60,.4)"  },
   ],
   skills: {
     Frontend:     { items: ["React.js","Next.js","JavaScript (ES6+)","TypeScript","HTML5","CSS3","Tailwind CSS","Bootstrap","Shadcn/UI"], color: "#a78bfa" },
     "State Mgmt": { items: ["Redux Toolkit","Redux","useState","useEffect","useCallback","useMemo","useRef"], color: "#38bdf8" },
-    "API & Tools":{ items: ["Axios","REST APIs","Interceptors","Axios Instances","Bhasini Plugin"], color: "#34d399" },
-    Backend:      { items: ["Node.js","Express.js","MongoDB","JWT Auth","REST API Design"], color: "#fb923c" },
+    "API & Tools":{ items: ["Axios","REST APIs","Interceptors","Axios Instances","Bhasini Plugin","Internal Component Libraries"], color: "#34d399" },
+    Backend:      { items: ["Node.js","Express.js","MongoDB","JWT Auth","REST API Design","ASP.NET","MySQL","SQL Stored Procedures"], color: "#fb923c" },
     DevTools:     { items: ["Git","GitHub","Azure DevOps","Postman","VS Code","MS Office"], color: "#f472b6" },
     Concepts:     { items: ["RBAC","Code Splitting","Form Validation","Push Notifications","Audit Trails"], color: "#a3e635" },
   },
   experience: [
     {
+      company: "GreenSoft Solutions Pvt. Ltd.",
+      sub: "Product-Based Company · GT Infiniti — Transportation Platform",
+      role: "React Developer",
+      period: "Jun 2026 – Present",
+      location: "Dwarka Sector 8, New Delhi (near IGI Airport)",
+      project: "GT Infiniti — Transportation Platform",
+      current: true,
+      color: "#f472b6",
+      tech: ["React.js","Tailwind CSS","MySQL","SQL Stored Procedures","ASP.NET"],
+      bullets: [
+        "Joined as a React Developer at GreenSoft, a product-based company building GT Infiniti, an in-house transportation platform.",
+        "Built and maintained UI features using React.js and Tailwind CSS, working within the company's proprietary component library (custom dropdowns, input fields & shared UI primitives).",
+        "Wrote and integrated MySQL stored procedures to power data-driven components across the platform.",
+        "Contributed in a supporting capacity (~2–3%) to ASP.NET backend development alongside core frontend work.",
+        "Adapted quickly into a collaborative, well-structured engineering culture within the first three months on the team.",
+      ],
+    },
+    {
       company: "Cetpa Infotech Pvt. Ltd.",
       sub: "E-Governance · DFCCIL · Ministry of Railways, GoI",
       role: "Junior React Developer",
-      period: "Jan 2025 – Present",
+      period: "Jan 2025 – May 2026",
       location: "Noida, UP",
       project: "DFCCIL – Training & Task Management",
-      current: true,
+      current: false,
       color: "#a78bfa",
       tech: ["React.js","Redux Toolkit","Tailwind CSS","Shadcn/UI","Axios","REST APIs"],
       bullets: [
@@ -158,26 +183,35 @@ const DATA = {
   projects: [
     {
       num: "01",
+      title: "GT Infiniti — Transportation Platform",
+      period: "Jun 2026 – Present · GreenSoft Solutions",
+      desc: "Product-based transportation platform. Built UI features with React.js & Tailwind CSS using the company's internal component library, backed by MySQL stored procedures and light ASP.NET backend contributions.",
+      metrics: ["Internal Component Library","MySQL Stored Procedures","ASP.NET Support","Product-Based"],
+      tags: ["React.js","Tailwind CSS","MySQL","ASP.NET"],
+      color: "#f472b6",
+    },
+    {
+      num: "02",
       title: "Training Management System (TMS)",
-      period: "2025 – Present · DFCCIL, Ministry of Railways",
+      period: "2025 – May 2026 · DFCCIL, Ministry of Railways",
       desc: "Enterprise training platform with role-based training creation, multi-level approvals, employee enrollment, vendor/session management, real-time notifications, and full audit history.",
       metrics: ["Role-Based UI","Multi-Level Approvals","Real-Time Notifications","Full Audit Trail"],
       tags: ["React.js","Redux Toolkit","Tailwind CSS","Shadcn/UI","Axios","REST APIs"],
       color: "#a78bfa",
     },
     {
-      num: "02",
+      num: "03",
       title: "Task Management System",
-      period: "2025 – Present · DFCCIL, Ministry of Railways",
+      period: "2025 – May 2026 · DFCCIL, Ministry of Railways",
       desc: "Role-based task tracking app — create, assign, delegate, and review tasks with deadline extension workflows; responsive UI with Redux state management.",
       metrics: ["Task Assignment","Deadline Workflows","Redux State","Responsive UI"],
       tags: ["React.js","Redux Toolkit","Tailwind CSS","REST APIs","Axios"],
       color: "#38bdf8",
     },
     {
-      num: "03",
+      num: "04",
       title: "Enterprise Platform Contributions",
-      period: "2025 – Present · DFCCIL, Ministry of Railways",
+      period: "2025 – May 2026 · DFCCIL, Ministry of Railways",
       desc: "Bug fixing, REST API integration, and UI/UX enhancements across Event Management, Asset Management, and Visitor Management Systems.",
       metrics: ["Event Management","Asset Management","Visitor Management","API Integration"],
       tags: ["React.js","REST APIs","UI/UX","Bug Fixing"],
@@ -185,6 +219,7 @@ const DATA = {
     },
   ],
   achievements: [
+    { icon: "🚦", title: "Product Company",      desc: "GreenSoft — GT Infiniti platform",     color: "#f472b6" },
     { icon: "🏛", title: "Gov. of India Client",  desc: "DFCCIL — Ministry of Railways",        color: "#a78bfa" },
     { icon: "🚀", title: "Sole Frontend Dev",      desc: "Led TMS & Task Mgmt end-to-end",        color: "#38bdf8" },
     { icon: "🌐", title: "Bhasini Integration",    desc: "Multilingual govt accessibility API",    color: "#34d399" },
@@ -268,6 +303,55 @@ function Particles() {
     };
   }, []);
   return <canvas ref={canvasRef} style={{ position: "fixed", inset: 0, pointerEvents: "none", zIndex: 0, opacity: .45 }} />;
+}
+
+/* ── NIGHT SKY — full-background twinkling stars + traveling shooting stars ── */
+function NightSky() {
+  const stars = useMemo(() => Array.from({ length: 140 }, (_, i) => {
+    const bright = Math.random() < 0.18; // ~18% are bigger, brighter "hero" stars
+    return {
+      id: i,
+      top: Math.random() * 100,
+      left: Math.random() * 100,
+      size: bright ? Math.random() * 1.8 + 2.6 : Math.random() * 1.6 + 1.1,
+      glow: bright ? 3 : 1.6,
+      dur: 1.8 + Math.random() * 3,
+      delay: Math.random() * 5,
+    };
+  }), []);
+
+  const shootingStars = useMemo(() => Array.from({ length: 12 }, (_, i) => ({
+    id: i,
+    top: Math.random() * 50,
+    left: 8 + Math.random() * 84,
+    dur: 2.2 + Math.random() * 2.4,
+    delay: i * 0.35 + Math.random() * 0.5,
+    angle: -30 - Math.random() * 20,
+  })), []);
+
+  return (
+    <div style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none", overflow: "hidden" }}>
+      {stars.map((s) => (
+        <div key={s.id} style={{
+          position: "absolute", top: `${s.top}%`, left: `${s.left}%`,
+          width: s.size, height: s.size, borderRadius: "50%",
+          background: "#fff",
+          boxShadow: `0 0 ${s.size * s.glow}px ${s.size * 0.6}px rgba(255,255,255,.85)`,
+          animation: `twinkle ${s.dur}s ease-in-out infinite`, animationDelay: `${s.delay}s`,
+        }} />
+      ))}
+      {shootingStars.map((s) => (
+        <div key={s.id} style={{
+          position: "absolute", top: `${s.top}%`, left: `${s.left}%`,
+          transform: `rotate(${s.angle}deg)`,
+          animation: `shootStar ${s.dur}s linear infinite`, animationDelay: `${s.delay}s`,
+        }}>
+          <div style={{ width: 3, height: 3, borderRadius: "50%", background: "#fff", boxShadow: "0 0 10px 3px rgba(255,255,255,1)" }} />
+          <div style={{ position: "absolute", top: "50%", right: "100%", width: 120, height: 1.5, transform: "translateY(-50%)", background: "linear-gradient(90deg, transparent, rgba(255,255,255,.9))" }} />
+        </div>
+      ))}
+    </div>
+  );
 }
 
 /* ── TYPEWRITER ── */
@@ -356,73 +440,48 @@ function Nav() {
   );
 }
 
-/* ── ANIMATED FLOWER COMPONENT ── */
-function AnimatedFlower({ size = 80, delay = 0 }) {
+/* ── STAR & MOON ICONS ── */
+function StarIcon({ size = 14, color = "#fbbf24" }) {
   return (
-    <svg viewBox="0 0 200 200" width={size} height={size} style={{ filter: "drop-shadow(0 0 25px rgba(249, 115, 22, 0.7))", animationDelay: `${delay}s` }}>
-      <defs>
-        <style>{`
-          @keyframes petalSway { 
-            0% { transform: rotate(0deg) translateY(0); filter: drop-shadow(0 0 8px rgba(249, 115, 22, 0.8)); } 
-            25% { transform: rotate(15deg) translateY(-5px); filter: drop-shadow(0 0 15px rgba(249, 115, 22, 0.9)); }
-            50% { transform: rotate(0deg) translateY(0); filter: drop-shadow(0 0 20px rgba(251, 146, 60, 1)); } 
-            75% { transform: rotate(-15deg) translateY(-5px); filter: drop-shadow(0 0 15px rgba(249, 115, 22, 0.9)); }
-            100% { transform: rotate(0deg) translateY(0); filter: drop-shadow(0 0 8px rgba(249, 115, 22, 0.8)); }
-          }
-          @keyframes centerGlow {
-            0%, 100% { r: 18px; filter: drop-shadow(0 0 10px rgba(251, 146, 60, 0.8)); }
-            50% { r: 22px; filter: drop-shadow(0 0 20px rgba(251, 146, 60, 1)); }
-          }
-        `}</style>
-      </defs>
-      
-      {/* Outer Petals (Large) */}
-      {[0, 1, 2, 3, 4, 5].map((i) => (
-        <g key={`petal-large-${i}`} style={{ transformOrigin: "100px 100px", animation: `petalSway 6s ease-in-out infinite`, animationDelay: `${i * 0.15}s` }}>
-          <ellipse cx="100" cy="40" rx="18" ry="35" fill="#fb923c" opacity="0.95" />
-          <ellipse cx="100" cy="42" rx="14" ry="28" fill="#fbbf24" opacity="0.8" />
-        </g>
-      ))}
-
-      {/* Rotate entire flower */}
-      <g style={{ transformOrigin: "100px 100px", animation: "spin 20s linear infinite" }}>
-        {/* Middle Petals */}
-        {[0, 1, 2, 3, 4, 5].map((i) => (
-          <g key={`petal-mid-${i}`} style={{ transformOrigin: "100px 100px", transform: `rotate(${i * 60}deg)` }}>
-            <ellipse cx="100" cy="55" rx="14" ry="28" fill="#f97316" opacity="0.85" />
-            <ellipse cx="100" cy="57" rx="10" ry="22" fill="#fb923c" opacity="0.7" />
-          </g>
-        ))}
-
-        {/* Inner Petals */}
-        {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((i) => (
-          <g key={`petal-inner-${i}`} style={{ transformOrigin: "100px 100px", transform: `rotate(${i * 30}deg)` }}>
-            <ellipse cx="100" cy="73" rx="10" ry="18" fill="#ea580c" opacity="0.75" />
-            <ellipse cx="100" cy="74" rx="7" ry="14" fill="#f97316" opacity="0.6" />
-          </g>
-        ))}
-      </g>
-
-      {/* Center Circle with glow */}
-      <circle cx="100" cy="100" r="18" fill="#fbbf24" style={{ animation: "centerGlow 3s ease-in-out infinite" }} />
-      <circle cx="100" cy="100" r="14" fill="#fcd34d" opacity="0.9" />
-      
-      {/* Center detail */}
-      <circle cx="100" cy="100" r="8" fill="#f59e0b" />
-      {[0, 1, 2, 3].map((i) => (
-        <circle 
-          key={`dot-${i}`}
-          cx={100 + 5 * Math.cos((i * Math.PI) / 2)} 
-          cy={100 + 5 * Math.sin((i * Math.PI) / 2)} 
-          r="2" 
-          fill="#fbbf24" 
-        />
-      ))}
+    <svg viewBox="0 0 24 24" width={size} height={size} style={{ filter: `drop-shadow(0 0 6px ${color}aa)` }}>
+      <path d="M12 0 L14.6 8.8 L24 12 L14.6 15.2 L12 24 L9.4 15.2 L0 12 L9.4 8.8 Z" fill={color} />
+    </svg>
+  );
+}
+function MoonIcon({ size = 22, color = "#e0e7ff" }) {
+  return (
+    <svg viewBox="0 0 24 24" width={size} height={size} style={{ filter: `drop-shadow(0 0 8px ${color}99)` }}>
+      <path d="M20.5 13.2A8.7 8.7 0 1 1 10.8 3.5a7 7 0 0 0 9.7 9.7Z" fill={color} />
     </svg>
   );
 }
 
 /* ── HERO IMAGE FRAME ── */
+/* Stars & a moon orbit around the photo instead of sitting below it — keeps the
+   image section compact with no extra vertical space. */
+const ORBIT_ITEMS = [
+  { angle: -20,  size: 15, type: "star", delay: "0s"   },
+  { angle: 55,   size: 24, type: "moon", delay: "0.4s" },
+  { angle: 130,  size: 11, type: "star", delay: "0.9s" },
+  { angle: 195,  size: 13, type: "star", delay: "1.4s" },
+  { angle: 260,  size: 10, type: "star", delay: "0.6s" },
+  { angle: 320,  size: 12, type: "star", delay: "1.1s" },
+];
+function OrbitDecor() {
+  return (
+    <div style={{ position: "absolute", inset: 0, pointerEvents: "none" }}>
+      {ORBIT_ITEMS.map((o, i) => (
+        <div key={i} style={{
+          position: "absolute", top: "50%", left: "50%",
+          transform: `rotate(${o.angle}deg) translate(var(--orbit-r)) rotate(${-o.angle}deg) translate(-50%,-50%)`,
+          animation: "pulse 3s ease-in-out infinite", animationDelay: o.delay,
+        }}>
+          {o.type === "star" ? <StarIcon size={o.size} /> : <MoonIcon size={o.size} />}
+        </div>
+      ))}
+    </div>
+  );
+}
 function ImageFrame() {
   return (
     <div className="photo-frame hero-image-container">
@@ -432,46 +491,10 @@ function ImageFrame() {
         {/* UPDATE THIS WITH YOUR IMAGE URL */}
         <img src="a.png" alt="Devesh Pratap Singh" />
       </div>
-      {/* Decorative dots */}
-      {[
-        { top: -12, right: -12, size: 38, delay: "0s", op: 0.8 },
-        { bottom: -10, left: -10, size: 30, delay: "1.5s", op: 0.6 },
-      ].map((f, i) => (
-        <div key={i} style={{ position: "absolute", top: f.top, right: f.right, bottom: f.bottom, left: f.left, width: f.size, height: f.size, opacity: f.op, animationDelay: f.delay, animation: "pulse 3s ease-in-out infinite" }}>
-          <svg viewBox="0 0 100 100" width={f.size} height={f.size}>
-            <path d="M50 0 C 50 25 75 50 100 50 C 75 50 50 75 50 100 C 50 75 25 50 0 50 C 25 50 50 25 50 0" fill="#38bdf8" />
-          </svg>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-/* ── 4 FLOWERS DECORATION ── */
-function FourFlowers() {
-  return (
-    <div style={{ 
-      display: "flex", 
-      gap: "20px", 
-      alignItems: "center", 
-      justifyContent: "center", 
-      marginTop: "35px", 
-      zIndex: 10, 
-      position: "relative",
-      flexWrap: "wrap"
-    }}>
-      {[0, 1, 2, 3].map((i) => (
-        <div 
-          key={i} 
-          style={{ 
-            animation: "scaleIn .6s ease-out both",
-            animationDelay: `${i * 0.15}s`,
-            transformOrigin: "center"
-          }}
-        >
-          <AnimatedFlower size={70} delay={i * 0.2} />
-        </div>
-      ))}
+      {/* Stars & moon orbiting the photo — radius scales fluidly with the frame */}
+      <div style={{ position: "absolute", inset: 0, animation: "spin 40s linear infinite", ["--orbit-r" as any]: "clamp(96px, 17vw, 162px)" }}>
+        <OrbitDecor />
+      </div>
     </div>
   );
 }
@@ -487,7 +510,7 @@ function Hero() {
 
   return (
     <section id="home" style={{ minHeight: "100vh", display: "flex", alignItems: "center", position: "relative", overflow: "hidden", paddingTop: "4rem" }}>
-      <div style={{ position: "absolute", inset: 0, background: "#030712" }} />
+      <div style={{ position: "absolute", inset: 0, background: "rgba(3,7,18,0.72)" }} />
       <div style={{
         position: "absolute", inset: 0, transition: "all .8s",
         background: `
@@ -531,7 +554,7 @@ function Hero() {
 
           <div style={{ marginTop: "1rem", marginBottom: "0.75rem", animation: "fadeUp .7s 1s cubic-bezier(.16,1,.3,1) both" }}>
             <span className="mono" style={{ fontSize: "clamp(.75rem,2vw,1rem)", color: "rgba(255,255,255,.6)" }}>
-              <TypeWriter texts={["Junior React Developer", "MERN Stack Developer", "UI/UX Enthusiast", "REST API Integrator"]} />
+              <TypeWriter texts={["React Developer", "MERN Stack Developer", "UI/UX Enthusiast", "REST API Integrator"]} />
             </span>
           </div>
 
@@ -580,7 +603,6 @@ function Hero() {
         {/* Right Column */}
         <div style={{ animation: "scaleIn .8s .6s cubic-bezier(.16,1,.3,1) both", display: "flex", flexDirection: "column", alignItems: "center" }}>
           <ImageFrame />
-          <FourFlowers />
         </div>
       </div>
     </section>
@@ -590,7 +612,7 @@ function Hero() {
 /* ── ABOUT ── */
 function About() {
   return (
-    <section id="about" style={{ padding: "3rem 1rem", background: "#030712", position: "relative" }}>
+    <section id="about" style={{ padding: "3rem 1rem", background: "rgba(3,7,18,0.72)", position: "relative" }}>
       <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 80% 60% at 50% 50%, rgba(139,92,246,.05), transparent)", pointerEvents: "none" }} />
       <div style={{ maxWidth: "70rem", margin: "0 auto", position: "relative", zIndex: 2 }}>
         <SH num="01 /" title="About Me" color="#a78bfa" />
@@ -598,7 +620,7 @@ function About() {
 
           <div>
             <h3 className="reveal syne" style={{ fontSize: "clamp(1rem,3vw,1.5rem)", fontWeight: 700, lineHeight: 1.3, marginBottom: "1rem" }}>
-              Building <span className="text-shimmer" style={{ fontStyle: "italic" }}>enterprise-grade</span> government apps.
+              Building <span className="text-shimmer" style={{ fontStyle: "italic" }}>enterprise-grade</span> and product-based apps.
             </h3>
             <p className="reveal" style={{ color: "rgba(255,255,255,.55)", lineHeight: 1.7, marginBottom: "1.5rem", fontSize: ".85rem", transitionDelay: ".1s" }}>{DATA.about}</p>
             <div className="reveal" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: ".6rem", transitionDelay: ".2s" }}>
@@ -655,7 +677,7 @@ function About() {
 function Experience() {
   const [open, setOpen] = useState(0);
   return (
-    <section id="experience" style={{ padding: "3rem 1rem", background: "#030712", position: "relative" }}>
+    <section id="experience" style={{ padding: "3rem 1rem", background: "rgba(3,7,18,0.72)", position: "relative" }}>
       <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 80% 60% at 50% 50%, rgba(56,189,248,.04), transparent)", pointerEvents: "none" }} />
       <div style={{ maxWidth: "70rem", margin: "0 auto", position: "relative", zIndex: 2 }}>
         <SH num="02 /" title="Experience" color="#38bdf8" />
@@ -725,7 +747,7 @@ function Experience() {
 /* ── PROJECTS ── */
 function Projects() {
   return (
-    <section id="projects" style={{ padding: "3rem 1rem", background: "#030712", position: "relative" }}>
+    <section id="projects" style={{ padding: "3rem 1rem", background: "rgba(3,7,18,0.72)", position: "relative" }}>
       <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 80% 60% at 50% 50%, rgba(52,211,153,.04), transparent)", pointerEvents: "none" }} />
       <div style={{ maxWidth: "70rem", margin: "0 auto", position: "relative", zIndex: 2 }}>
         <SH num="03 /" title="Key Projects" color="#34d399" />
@@ -774,7 +796,7 @@ function Skills() {
   const allItems = Object.values(DATA.skills).flatMap((s) => s.items);
 
   return (
-    <section id="skills" style={{ padding: "3rem 1rem", background: "#030712", position: "relative" }}>
+    <section id="skills" style={{ padding: "3rem 1rem", background: "rgba(3,7,18,0.72)", position: "relative" }}>
       <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 80% 60% at 50% 50%, rgba(251,146,60,.04), transparent)", pointerEvents: "none" }} />
       <div style={{ maxWidth: "70rem", margin: "0 auto", position: "relative", zIndex: 2 }}>
         <SH num="04 /" title="Technical Skills" color="#fb923c" />
@@ -864,7 +886,7 @@ function Contact() {
   const [copied, setCopied] = useState(false);
   const copy = () => { navigator.clipboard.writeText(DATA.email); setCopied(true); setTimeout(() => setCopied(false), 2000); };
   return (
-    <section id="contact" style={{ padding: "3rem 1rem 2.5rem", background: "#030712", position: "relative" }}>
+    <section id="contact" style={{ padding: "3rem 1rem 2.5rem", background: "rgba(3,7,18,0.72)", position: "relative" }}>
       <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse 80% 60% at 50% 50%, rgba(244,114,182,.05), transparent)", pointerEvents: "none" }} />
       <div style={{ maxWidth: "70rem", margin: "0 auto", position: "relative", zIndex: 2 }}>
         <SH num="05 /" title="Let's Talk" color="#f472b6" />
@@ -925,10 +947,10 @@ function Contact() {
 /* ── FOOTER ── */
 function Footer() {
   return (
-    <footer style={{ background: "#030712", borderTop: "1px solid rgba(255,255,255,.06)", padding: "1.2rem" }}>
+    <footer style={{ background: "rgba(3,7,18,0.72)", borderTop: "1px solid rgba(255,255,255,.06)", padding: "1.2rem" }}>
       <div style={{ maxWidth: "70rem", margin: "0 auto", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "0.8rem" }}>
         <span className="syne" style={{ fontSize: "0.9rem", fontWeight: 800, background: "linear-gradient(135deg,#38bdf8,#a78bfa)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>DEVESH PRATAP SINGH</span>
-        <span className="mono" style={{ fontSize: ".5rem", color: "rgba(255,255,255,.25)", letterSpacing: ".15em" }}>© {new Date().getFullYear()} · NOIDA, INDIA · JUNIOR REACT DEVELOPER</span>
+        <span className="mono" style={{ fontSize: ".5rem", color: "rgba(255,255,255,.25)", letterSpacing: ".15em" }}>© {new Date().getFullYear()} · NOIDA, INDIA · REACT DEVELOPER</span>
       </div>
     </footer>
   );
@@ -940,6 +962,7 @@ export default function Portfolio() {
   return (
     <div style={{ background: "#030712", minHeight: "100vh", color: "#fff" }}>
       <GlobalStyles />
+      <NightSky />
       <Particles />
       <div style={{ position: "relative", zIndex: 2 }}>
         <Nav />
