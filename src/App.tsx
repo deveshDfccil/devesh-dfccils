@@ -489,7 +489,7 @@ function ImageFrame() {
       <div className="photo-ring-2" />
       <div className="photo-circle">
         {/* UPDATE THIS WITH YOUR IMAGE URL */}
-        <img src="a.png" alt="Devesh Pratap Singh" />
+        <img src="a.jpeg" alt="Devesh Pratap Singh" />
       </div>
       {/* Stars & moon orbiting the photo — radius scales fluidly with the frame */}
       <div style={{ position: "absolute", inset: 0, animation: "spin 40s linear infinite", ["--orbit-r" as any]: "clamp(96px, 17vw, 162px)" }}>
