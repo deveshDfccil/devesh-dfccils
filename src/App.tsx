@@ -120,7 +120,7 @@ const DATA = {
   tagline: "React.js · Redux Toolkit · Tailwind CSS · MySQL · REST API Integration",
   email: "devesh639281@gmail.com",
   phone: "+91-6392814739",
-  location: "Noida, Sector 58, Uttar Pradesh, India",
+  location: "PLOT-65 Om Niwas, IIIrd Floor, Sector 8 Dwarka, Dwarka, New Delhi, Delhi 110077",
   links: {
     linkedin: "https://linkedin.com/in/merndevesh",
     github: "https://github.com/deveshDfccil/",
